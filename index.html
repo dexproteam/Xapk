@@ -1,0 +1,528 @@
+<!doctype html>
+<html lang="bn">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>MULTI APK PRO — Login & Downloader</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;800&display=swap" rel="stylesheet" />
+  <style>
+    :root{
+      --bg:#05060a;
+      --panel:rgba(11,13,18,0.88);
+      --neon1:#00ff6a;
+      --neon2:#00d1ff;
+      --neon3:#ffd166;
+      --muted:#9aa1a6;
+      --btn-grad:linear-gradient(90deg,#00ff6a,#00d4ff,#ff00e6);
+    }
+    *{box-sizing:border-box;margin:0;padding:0}
+    html,body{
+      height:100%;
+      background:var(--bg);
+      color:#e6f7ef;
+      font-family:'Poppins',sans-serif;
+      -webkit-font-smoothing:antialiased;
+    }
+
+    /* ---------- LOGIN BOX ---------- */
+    .center{
+      display:flex;align-items:center;justify-content:center;height:100vh;
+      padding:16px;
+    }
+    .login-box{
+      background:var(--panel);
+      padding:28px 28px 24px;
+      border-radius:16px;
+      backdrop-filter:blur(8px);
+      width:360px;
+      text-align:center;
+      box-shadow:0 14px 50px rgba(0,0,0,0.6);
+      border:1px solid rgba(255,255,255,0.02);
+      position:relative;
+    }
+    .login-box h2{
+      color:var(--neon1);
+      margin-bottom:14px;
+      font-size:1.25rem;
+    }
+    .login-box input{
+      width:100%;
+      padding:12px;
+      border-radius:10px;
+      border:none;
+      background:rgba(255,255,255,0.03);
+      color:inherit;
+      margin-bottom:12px;
+      font-size:1rem;
+    }
+    .login-box .btn{
+      width:100%;
+      padding:12px;
+      border-radius:10px;
+      border:none;
+      background:var(--btn-grad);
+      color:#000;
+      font-weight:700;
+      cursor:pointer;
+      transition:transform .18s ease;
+      user-select:none;
+    }
+    .login-box .btn:active{
+      transform:scale(.995);
+    }
+    .small{
+      font-size:0.9rem;
+      color:var(--muted);
+      margin-top:10px;
+    }
+    .get-access-btn {
+      margin-top:12px;
+      background:transparent;
+      border:none;
+      color:var(--neon1);
+      font-weight:700;
+      cursor:pointer;
+      text-decoration:underline;
+      user-select:none;
+      font-size:1rem;
+    }
+    .get-access-btn:hover {
+      color:var(--neon2);
+    }
+
+    /* ---------- Visit button (typing + color pulse) ---------- */
+    .visit-wrap{
+      margin-top:14px;
+      height:36px;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+    }
+    .visit-btn{
+      display:inline-block;
+      padding:8px 14px;
+      border-radius:10px;
+      border:2px solid rgba(255,255,255,0.04);
+      background:transparent;
+      color:var(--neon1);
+      font-weight:700;
+      text-decoration:none;
+      overflow:hidden;
+      white-space:nowrap;
+      cursor:pointer;
+      user-select:none;
+    }
+    .type-inner{
+      display:inline-block;
+      position:relative;
+      padding-left:6px;
+    }
+    .type-text{
+      display:inline-block;
+    }
+    .caret{
+      display:inline-block;
+      width:2px;
+      height:1.15em;
+      background:var(--neon1);
+      margin-left:8px;
+      vertical-align:middle;
+      animation:blink .7s steps(1) infinite;
+    }
+    @keyframes blink{
+      50%{opacity:0}
+    }
+    @keyframes pulseColors{
+      0%{border-color:var(--neon1);color:var(--neon1)}
+      33%{border-color:var(--neon2);color:var(--neon2)}
+      66%{border-color:var(--neon3);color:var(--neon3)}
+      100%{border-color:var(--neon1);color:var(--neon1)}
+    }
+    .visit-btn.animate{
+      animation:pulseColors 3s linear infinite;
+    }
+
+    /* ---------- MAIN APP ---------- */
+    .hidden{display:none}
+    .app{
+      max-width:980px;
+      margin:28px auto;
+      padding:20px;
+    }
+    header{
+      display:flex;
+      align-items:center;
+      gap:16px;
+      margin-bottom:18px;
+    }
+    .logo{
+      display:flex;
+      align-items:center;
+      gap:12px;
+    }
+    .logo .mark{
+      width:56px;
+      height:56px;
+      border-radius:12px;
+      background:linear-gradient(135deg,#00140b,#00331a);
+      display:grid;
+      place-items:center;
+      box-shadow:0 0 18px rgba(0,255,106,0.12);
+    }
+    .logo .mark span{
+      font-weight:800;
+      color:var(--neon1);
+      font-size:1.4rem;
+    }
+    h1{
+      font-size:1.4rem;
+      font-weight:800;
+    }
+    .meta{
+      font-size:0.9rem;
+      color:var(--muted);
+    }
+    .card-list{
+      display:grid;
+      grid-template-columns:repeat(auto-fill,minmax(260px,1fr));
+      gap:18px;
+    }
+    .card{
+      background:var(--panel);
+      padding:16px;
+      border-radius:12px;
+      border:1px solid rgba(255,255,255,0.02);
+    }
+    .card h3{
+      color:var(--neon1);
+      margin:0 0 8px;
+    }
+    .card .meta{
+      font-size:0.85rem;
+      color:var(--muted);
+    }
+    .card .row{
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      margin-top:12px;
+    }
+
+    /* ---------- BUTTON (GRADIENT ANIM) ---------- */
+    .btn-grad{
+      padding:10px 18px;
+      border-radius:12px;
+      border:none;
+      color:#000;
+      font-weight:700;
+      cursor:pointer;
+      background:linear-gradient(90deg,#00ff6a,#00d4ff,#ff00e6);
+      background-size:300% 100%;
+      transition:background-position .6s ease,transform .15s ease,box-shadow .15s ease;
+      box-shadow:0 6px 18px rgba(0,0,0,0.45);
+      user-select:none;
+    }
+    .btn-grad:hover{
+      background-position:100% 50%;
+      transform:translateY(-3px);
+      box-shadow:0 18px 40px rgba(0,0,0,0.6);
+    }
+    .btn-ghost{
+      background:transparent;
+      border:1px solid rgba(255,255,255,0.06);
+      color:var(--neon1);
+      padding:8px 12px;
+      border-radius:10px;
+      cursor:pointer;
+      user-select:none;
+    }
+
+    /* ---------- POPUP ---------- */
+    .popup{
+      position:fixed;
+      inset:0;
+      background:rgba(0,0,0,0.6);
+      display:none;
+      align-items:center;
+      justify-content:center;
+      z-index:2000;
+      padding:12px;
+    }
+    .popup-box{
+      max-width:400px;
+      width:100%;
+      background:var(--panel);
+      padding:24px 28px;
+      border-radius:12px;
+      text-align:left;
+      border:1px solid rgba(255,255,255,0.03);
+      box-shadow:0 0 30px rgba(0,255,106,0.15);
+      position:relative;
+    }
+    .popup-title{
+      font-weight:800;
+      color:var(--neon1);
+      margin-bottom:14px;
+      font-size:1.3rem;
+      text-align:center;
+    }
+    .popup-subtitle{
+      font-weight:700;
+      color:var(--neon3);
+      margin-top:18px;
+      margin-bottom:8px;
+      font-size:1.1rem;
+    }
+    .popup-text{
+      font-size:1rem;
+      color:#c0cbd3;
+      line-height:1.5;
+      white-space: pre-line;
+    }
+    .popup-close{
+      position:absolute;
+      top:12px;
+      right:12px;
+      background:transparent;
+      border:none;
+      font-size:1.8rem;
+      font-weight:700;
+      color:var(--neon1);
+      cursor:pointer;
+      user-select:none;
+      transition:color 0.3s ease;
+    }
+    .popup-close:hover{
+      color:var(--neon2);
+    }
+  </style>
+</head>
+<body>
+
+  <!-- LOGIN -->
+  <div id="loginPage" class="center">
+    <div class="login-box">
+      <h2>Enter Access Code</h2>
+
+      <!-- only password -->
+      <input id="password" type="password" placeholder="Password (hidden)" autocomplete="off" />
+      <button class="btn" onclick="checkLogin()">Login</button>
+
+      <button class="get-access-btn" id="getAccessBtn">Get Access Code?</button>
+
+      <!-- Visit rotating typing button -->
+      <div class="visit-wrap">
+        <a id="visitBtn" class="visit-btn" href="#" target="_blank" rel="noopener">
+          <span class="type-inner"><span id="typeText" class="type-text"></span></span>
+          <span class="caret"></span>
+        </a>
+      </div>
+
+      <div class="small">Powered by CREATOR DEXPRO TEAM</div>
+    </div>
+  </div>
+
+  <!-- ACCESS CODE POPUP -->
+  <div id="accessPopup" class="popup" aria-hidden="true">
+    <div class="popup-box" role="dialog" aria-modal="true" aria-labelledby="accessPopupTitle">
+      <button class="popup-close" aria-label="Close popup" id="closeAccessPopup">&times;</button>
+      <h2 class="popup-title" id="accessPopupTitle">What Is Xapk?</h2>
+      <p class="popup-text">
+Xapk হলো আপনি এখানে সব পেইড এপ ফ্রিতে পাবেন প্রতি ৪ দিন পরপর নতুন অ্যাপ আসবে ও এক্সেস কোড পরিবর্তন হবে।
+      </p>
+      <h3 class="popup-subtitle">কিভাবে এক্সেস কোড পাবেন?</h3>
+      <p class="popup-text" style="white-space:normal;line-height:1.6">
+১) Visit TikTok বা YouTube এ ক্লিক করুন।<br />
+২) TikTok-এ গেলে বায়োতে লিংক এ ক্লিক করুন, পরে সাইটে প্রবেশ করুন ও “কপি কোড” এ ক্লিক করুন।<br />
+৩) YouTube-এ সেম পদ্ধতি অনুসরণ করুন।<br />
+      </p>
+    </div>
+  </div>
+
+  <!-- MAIN APP -->
+  <div id="mainApp" class="hidden app">
+    <header>
+      <div class="logo">
+        <div class="mark"><span>M</span></div>
+        <div>
+          <h1>MULTI APK PRO By Hasan Mahmud</h1>
+          <div class="meta">CREATOR DEXPRO TEAM HASAN</div>
+        </div>
+      </div>
+    </header>
+
+    <section id="apps" class="card-list"></section>
+
+    <footer style="margin-top:20px;color:var(--muted);text-align:center">Copyright Claim By MMP 2025 All Rights Reserved.</footer>
+  </div>
+
+  <!-- DOWNLOAD POPUP -->
+  <div id="downloadPopup" class="popup" aria-hidden="true">
+    <div class="popup-box" role="dialog" aria-modal="true" aria-labelledby="downloadPopupTitle">
+      <button class="popup-close" aria-label="Close popup" id="closeDownloadPopup">&times;</button>
+      <div class="popup-title" id="downloadPopupTitle">App Name</div>
+      <div class="popup-size" id="popupAppSize">Size</div>
+
+      <div class="popup-loader" aria-hidden="true">
+        <div class="fill" id="loaderFill" style="width:0; height:14px; background: linear-gradient(90deg, var(--neon1), var(--neon2)); border-radius:12px;"></div>
+      </div>
+
+      <div class="popup-count">Starts in <span id="popupCountdown">6</span>s</div>
+
+      <div class="popup-actions" style="margin-top:14px; display:flex; justify-content:center;">
+        <button id="downloadBtn" class="btn-grad" style="opacity:0; transform: translateY(8px); transition: all 0.35s ease;">Download</button>
+      </div>
+    </div>
+  </div>
+
+<script>
+  /* ---------------- Visit typing + color animation (3s cycle) ---------------- */
+  const visitItems = [
+    {text:'Visit TikTok', url:'https://tiktok.com/@ariyaan321'},
+    {text:'Visit YouTube', url:'https://youtube.com/@ariyaan321'},
+    {text:'Visit Website', url:'https://topup24bd.ct.ws'}
+  ];
+  const typeTextEl = document.getElementById('typeText');
+  const visitBtn = document.getElementById('visitBtn');
+  let visitIdx = 0;
+  let typingTimer = null;
+  let cycleTimer = null;
+
+  function showTyped(text){
+    clearInterval(typingTimer);
+    typeTextEl.textContent = '';
+    let i = 0;
+    typingTimer = setInterval(()=>{
+      if(i < text.length) { typeTextEl.textContent += text[i++]; }
+      else clearInterval(typingTimer);
+    }, 55);
+  }
+
+  function startVisitCycle(){
+    showTyped(visitItems[visitIdx].text);
+    visitBtn.href = visitItems[visitIdx].url;
+    visitBtn.classList.add('animate');
+    if(cycleTimer) clearTimeout(cycleTimer);
+    cycleTimer = setTimeout(()=>{
+      visitIdx = (visitIdx + 1) % visitItems.length;
+      startVisitCycle();
+    }, 3000);
+  }
+  startVisitCycle();
+
+  /* ---------------- Login (password only) ---------------- */
+  const CORRECT_PASS = 'HK123'; // change if needed
+  function checkLogin(){
+    const p = document.getElementById('password').value.trim();
+    if(p === CORRECT_PASS){
+      document.getElementById('loginPage').classList.add('hidden');
+      document.getElementById('mainApp').classList.remove('hidden');
+      renderApps(apps);
+    } else {
+      // slight effect then redirect to your youtube channel
+      visitBtn.classList.add('animate');
+      setTimeout(()=>{ window.location.href = 'https://youtube.com/@allrounder-20k?si=_9QVa8Q4KKUUACUd' },750);
+    }
+  }
+
+  /* ---------------- Apps list ---------------- */
+  const apps = [
+    {name:'Minecraft',version:'v1.21.100',size:'296.8 MB',link:'https://modscraft.net/en/downloads/16443'},
+    {name:'CapCut Pro',version:'v7.9.0',size:'95 MB',link:'#'},
+    {name:'InShot Pro',version:'v2.9',size:'85 MB',link:'#'},
+    {name:'PicsArt Pro',version:'v20.5',size:'120 MB',link:'#'}
+  ];
+  function renderApps(list){
+    const el = document.getElementById('apps');
+    el.innerHTML = '';
+    list.forEach(a=>{
+      const card = document.createElement('article');
+      card.className = 'card';
+      card.innerHTML = `
+        <h3>${a.name}</h3>
+        <div class="meta">${a.version} • ${a.size}</div>
+        <div class="row">
+          <div class="meta">Direct APK</div>
+          <div><button class="btn-grad">Download</button></div>
+        </div>
+      `;
+      card.querySelector('button').addEventListener('click', () => showDownloadPopup(a));
+      el.appendChild(card);
+    });
+  }
+
+  /* ---------------- Download popup ---------------- */
+  const downloadPopup = document.getElementById('downloadPopup');
+  const popupAppName = document.getElementById('downloadPopupTitle');
+  const popupAppSize = document.getElementById('popupAppSize');
+  const popupCountdown = document.getElementById('popupCountdown');
+  const downloadBtn = document.getElementById('downloadBtn');
+  const loaderFill = document.getElementById('loaderFill');
+  const closeDownloadPopup = document.getElementById('closeDownloadPopup');
+
+  let countdownInterval, loadingInterval;
+
+  function showDownloadPopup(app){
+    popupAppName.textContent = app.name;
+    popupAppSize.textContent = `Size: ${app.size}`;
+    popupCountdown.textContent = '6';
+    loaderFill.style.width = '0%';
+    downloadBtn.style.opacity = '0';
+    downloadBtn.style.transform = 'translateY(8px)';
+    downloadBtn.disabled = true;
+    downloadBtn.onclick = null;
+    downloadPopup.style.display = 'flex';
+
+    let timeLeft = 6;
+    clearInterval(countdownInterval);
+    clearInterval(loadingInterval);
+
+    countdownInterval = setInterval(() => {
+      timeLeft--;
+      popupCountdown.textContent = timeLeft;
+      if(timeLeft <= 0){
+        clearInterval(countdownInterval);
+        downloadBtn.style.opacity = '1';
+        downloadBtn.style.transform = 'translateY(0)';
+        downloadBtn.disabled = false;
+        downloadBtn.onclick = () => {
+          window.open(app.link,'_blank');
+          closeDownloadPopupFn();
+        };
+      }
+    }, 1000);
+
+    let progress = 0;
+    loadingInterval = setInterval(() => {
+      if(progress >= 100) {
+        clearInterval(loadingInterval);
+        return;
+      }
+      progress += 1.66; // 6s to 100%
+      loaderFill.style.width = progress + '%';
+    }, 100);
+  }
+
+  closeDownloadPopup.addEventListener('click', closeDownloadPopupFn);
+  function closeDownloadPopupFn(){
+    clearInterval(countdownInterval);
+    clearInterval(loadingInterval);
+    downloadPopup.style.display = 'none';
+  }
+
+  /* ---------------- Access Code popup ---------------- */
+  const accessPopup = document.getElementById('accessPopup');
+  const getAccessBtn = document.getElementById('getAccessBtn');
+  const closeAccessPopupBtn = document.getElementById('closeAccessPopup');
+
+  getAccessBtn.addEventListener('click', () => {
+    accessPopup.style.display = 'flex';
+  });
+  closeAccessPopupBtn.addEventListener('click', () => {
+    accessPopup.style.display = 'none';
+  });
+
+</script>
+
+</body>
+</html>
